@@ -1,0 +1,34 @@
+<?php
+//http://v3.gusto.com.mt/webservice/savecrashreport.php?deviceinfo=xxx&class=XXX&function=XXX&exceptiondetail=XXXX&stacktrace=XXXX&format=json
+include("db.php");
+$format = strtolower($_GET['format']) == 'json' ? 'json' : 'xml'; //xml is the default
+$deviceinfo=$_GET['deviceinfo'];
+$class=$_GET['class'];
+$function=$_GET['function'];
+$exceptiondetail=$_GET['exceptiondetail'];
+$stacktrace=$_GET['stacktrace'];
+$insertid=0;
+//echo "TEST";
+//print_r($_POST);
+//exit;
+$queryJson="INSERT INTO  `gustomt_v3`.`crashreporting`(`id` ,`deviceinfo` ,`class` ,`function` ,`exceptiondetail` ,`stacktrace`,`created`) VALUES (NULL ,  '$deviceinfo',  '$class',  '$function',  '$exceptiondetail',  '$stacktrace',NOW());
+$resultJson = mysql_query($queryJson,$link) or die('Errant query:  '.$queryJson);
+echo $queryJson;
+echo "insertid : ".$insertid = mysql_insert_id();
+exit;
+$posts = array();
+if($insertid)
+{
+
+$posts="SAVED";
+
+}
+else
+{
+$posts="NOT SAVED";
+}
+header('Content-type: application/json');
+echo json_encode($posts);
+/* disconnect from the db */
+@mysql_close($link);
+?>
